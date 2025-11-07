@@ -11,7 +11,7 @@ use SAPNW::Base;
 use base qw(SAPNW::Base);
 
 use vars qw($VERSION $AUTOLOAD);
-$VERSION = '0.38';
+$VERSION = '0.50';
 
 
   sub AUTOLOAD {

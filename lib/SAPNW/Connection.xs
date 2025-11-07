@@ -41,15 +41,8 @@ extern "C" {
  * local prototypes & declarations
  */
 
-/* fake up a definition of bool if it doesnt exist */
-#ifndef bool
-typedef SAP_RAW    bool;
-#endif
-
-/* create my true and false */
-#ifndef false
-typedef enum { false, true } mybool;
-#endif
+/* Use standard bool type - compatible with C99 through C23+ */
+#include <stdbool.h>
 
 
 typedef struct SAPNW_CONN_INFO_rec {
@@ -143,6 +136,7 @@ SAP_UC * u8to16c(char * str) {
     resultLength = 0;
 
     rc = RfcUTF8ToSAPUC((RFC_BYTE *)str, strlen(str), sapuc, &sapucSize, &resultLength, &errorInfo);
+    (void)rc;  /* Intentionally not checking return value */
     return sapuc;
 }
 
@@ -167,6 +161,7 @@ SAP_UC * u8to16(SV * str) {
     resultLength = 0;
 
     rc = RfcUTF8ToSAPUC((RFC_BYTE *)SvPV(str, SvCUR(str)), SvCUR(str), sapuc, &sapucSize, &resultLength, &errorInfo);
+    (void)rc;  /* Intentionally not checking return value */
     return sapuc;
 }
 
@@ -185,6 +180,7 @@ SV * u16to8c(SAP_UC * str, int len) {
     resultLength = 0;
 
     rc = RfcSAPUCToUTF8(str, len, (RFC_BYTE *)utf8, &utf8Size, &resultLength, &errorInfo);
+    (void)rc;  /* Intentionally not checking return value */
     perl_str = newSVpv(utf8, resultLength);
     free(utf8);
 
@@ -210,6 +206,7 @@ SV * u16to8(SAP_UC * str) {
     resultLength = 0;
 
     rc = RfcSAPUCToUTF8(str, strlenU(str), (RFC_BYTE *)utf8, &utf8Size, &resultLength, &errorInfo);
+    (void)rc;  /* Intentionally not checking return value */
     perl_str = newSVpv(utf8, resultLength);
     free(utf8);
     SvUTF8_on(perl_str);
@@ -345,7 +342,6 @@ SV* SAPNWRFC_connection_attributes(SV* sv_self){
     HV* h_self;
     SV* sv_handle;
     HV* hv_attrib;
-    char * ptr;
 
     h_self =  (HV*)SvRV( sv_self );
     if (! hv_exists(h_self, (char *) "handle", 6)) {
