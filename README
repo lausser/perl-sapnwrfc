@@ -1,5 +1,118 @@
-
                sapnwrfc - SAP Netweaver RFC support for Perl
+
+
+================================================================================
+                           FORK NOTICE - PLEASE READ
+================================================================================
+
+Original Author:    Piers Harding <piers@cpan.org>
+Original Project:   https://github.com/piersharding/perl-sapnwrfc
+Last Official:      Version 0.37 (2013)
+
+Fork Maintainer:    Gerhard Lausser <gerhard.lausser@consol.de>
+Fork Repository:    https://github.com/lausser/perl-sapnwrfc
+Current Version:    0.50 (2025)
+
+ABOUT THIS FORK
+---------------
+This is an UNOFFICIAL maintenance fork of the original sapnwrfc project,
+which has not been updated since 2013.
+
+WHY THIS FORK EXISTS:
+I maintain check_sap_health (https://github.com/lausser/check_sap_health),
+a Nagios/Icinga monitoring plugin for SAP systems, which depends on sapnwrfc.
+When customers want to modernize their infrastructure to current Linux
+distributions (Fedora 43+, RHEL 10+, etc.), the original 2013 code fails
+to compile on modern C23 compilers (GCC 14+).
+
+This fork exists to:
+  - Make sapnwrfc compile on modern systems (C23/GCC 14+)
+  - Maintain backward compatibility with legacy systems (CentOS 7)
+  - Support my consulting work around SAP monitoring
+  - Make the code available to others who need it
+
+This is NOT an official takeover or CPAN namespace claim. If Piers Harding
+wishes to resume maintenance of the original project, I will happily defer
+to the official repository.
+
+MAINTENANCE POLICY
+------------------
+Status:           Professional maintenance for check_sap_health support
+Free Support:     NONE - Use at your own risk
+Bug Reports:      Accepted via GitHub issues (no fix guarantees)
+Pull Requests:    Accepted (no merge timeline guarantees)
+Priority:         Features/fixes needed for check_sap_health take precedence
+
+COMMERCIAL SUPPORT
+------------------
+I maintain this fork as part of my professional consulting work around
+SAP monitoring (check_sap_health). If you require:
+
+  - Specific bug fixes or enhancements
+  - New feature development
+  - SNC (Secure Network Communications) implementation
+  - Integration with check_sap_health or other monitoring tools
+  - Custom SAP RFC development
+  - Consulting or training
+
+I am available for PAID consulting and development work on a HIGHLY SELECTIVE
+basis. My schedule is extremely limited, and I only accept engagements that
+are technically interesting, well-compensated, and respect my time constraints.
+
+In other words: I'm overworked, allergic to deadlines, and generally unavailable.
+You'll need to make an exceptionally compelling case (tears optional but effective)
+to get my attention.
+
+Contact: gerhard.lausser@consol.de
+
+IMPORTANT BOUNDARIES:
+  - NO free support or free development work
+  - NO urgent/deadline-driven projects without premium rates
+  - NO small requests - minimum engagement required
+  - Open source means the code is free, NOT my time
+
+If you have a serious, well-funded project, can accommodate a consultant who
+works on his own terms, and are prepared to beg in a heart-rending manner,
+then contact me. Otherwise, please hire someone else.
+
+RELATED PROJECTS
+----------------
+  - check_sap_health: https://github.com/lausser/check_sap_health
+    Nagios/Icinga monitoring plugin for SAP systems (uses sapnwrfc)
+
+INSTALLATION
+------------
+Since this is not on CPAN, install directly from GitHub:
+
+  # Using cpanm
+  cpanm git://github.com/lausser/perl-sapnwrfc.git
+
+  # Or manual installation
+  git clone https://github.com/lausser/perl-sapnwrfc.git
+  cd perl-sapnwrfc
+  perl Makefile.PL --source=/path/to/nwrfcsdk
+  make
+  make test
+  make install
+
+CHANGES IN VERSION 0.50 (2025)
+-------------------------------
+New fork by Gerhard Lausser to support check_sap_health on modern platforms.
+
+  - Fixed compilation errors on modern C23 compilers (GCC 14+)
+  - Fixed bool/true/false keyword conflicts
+  - Reduced compiler warnings
+  - Added LICENSE file (GPL-1.0+ OR Artistic-1.0)
+  - Updated documentation with fork information
+  - Maintains 100% backward compatibility with 0.37
+
+Version 0.50 marks a fresh start for this fork, creating clear distance
+from the abandoned upstream project with its inconsistent versioning
+(0.31/0.37/0.38 in different files).
+
+================================================================================
+                      ORIGINAL README FOLLOWS BELOW
+================================================================================
 
 
     Copyright (c) 2006 - 2014 Piers Harding.

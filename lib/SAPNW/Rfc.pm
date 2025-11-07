@@ -15,7 +15,7 @@ use Env qw($RFC_INI);
 require 5.008;
 
 use vars qw(@ISA $VERSION $SAPNW_RFC_CONFIG);
-$VERSION = '0.38';
+$VERSION = '0.50';
 @ISA = qw(SAPNW::Base);
 
 use YAML;

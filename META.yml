@@ -1,11 +1,15 @@
 name:         sapnwrfc
 abstract:     SAP NW RFC for Perl
-author:       Piers Harding <piers@cpan.org>
+author:
+  - Piers Harding <piers@cpan.org>
+  - Gerhard Lausser <gerhard.lausser@consol.de>
 license:      Perl
-version:      0.31
+version:      0.50
 resources:
   license: http://dev.perl.org/licenses/
-  homepage: http://www.piersharding.com/blog/
+  homepage: https://github.com/lausser/perl-sapnwrfc
+  repository: https://github.com/lausser/perl-sapnwrfc
+  bugtracker: https://github.com/lausser/perl-sapnwrfc/issues
 version_from: sapnwrfc.pm
 installdirs:  site
 requires:

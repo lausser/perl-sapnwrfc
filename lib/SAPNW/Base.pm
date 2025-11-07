@@ -12,7 +12,7 @@ package SAPNW::Base;
   use Data::Dumper;
 
   use vars qw($VERSION $DEBUG $SAPNW_RFC_CONFIG);
-  $VERSION = '0.38';
+  $VERSION = '0.50';
 
   use constant RFCIMPORT     => 1;
   use constant RFCEXPORT     => 2;
