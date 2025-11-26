@@ -1,11 +1,12 @@
 #!/bin/sh
-BASE=/home/piers/git/public/perl-sapnwrfc
-cd $BASE
+# Get the directory where this script resides
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$SCRIPT_DIR"
 find . -name '*.log' -type f -exec echo \> {} \;
 find . -name 'rfc*trc' -type f -exec rm -f {} \;
 find . -name '*~' -type f -exec rm -f {} \;
 
-VERS=0.38
+VERS=0.50
 DIST=sapnwrfc-$VERS
 BALL=$DIST.tar.gz
 ZIP=$DIST.zip
@@ -27,23 +28,26 @@ if [ -f $ZIP ]; then
   rm -f $ZIP
 fi
 
-echo "make tar ball: $BALL"
+echo "Creating distribution via make dist..."
 make dist
-ls -l $BALL
-tar -xzvf $BALL
 
-echo "make zip: $ZIP"
+echo "Extracting tarball to create zip..."
+tar -xzf $BALL
+
+echo "Creating zip: $ZIP"
 zip -r $ZIP $DIST
 ls -l $ZIP
 
+echo "Removing temporary files..."
+rm -f $BALL
 if [ -d $DIST ]; then
-  echo "removing: $DIST ..."
   rm -rf $DIST
 fi
-echo "Done."
 
-chmod -R a+r $BALL $ZIP
+echo "Done. Created: $ZIP"
 
-echo "Copy up distribution"
-scp $BALL piersharding.com:www/download/
-scp $ZIP piersharding.com:www/download/
+chmod a+r $ZIP
+
+#echo "Copy up distribution"
+#scp $BALL piersharding.com:www/download/
+#scp $ZIP piersharding.com:www/download/

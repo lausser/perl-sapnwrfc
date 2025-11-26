@@ -27,4 +27,5 @@ t/05_function_lookup_z.t
 t/06test_data_z.t
 t/07changing_z.t
 t/08deep_z.t
+t/99_dualvar.t
 examples/register.pl
