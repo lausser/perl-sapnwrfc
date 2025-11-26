@@ -110,6 +110,11 @@ Version 0.50 marks a fresh start for this fork, creating clear distance
 from the abandoned upstream project with its inconsistent versioning
 (0.31/0.37/0.38 in different files).
 
+Unfortunately the original author was not reachable any more.
+<piers@cpan.org>: host b1.develooper.com[45.54.12.11] said: 554 5.7.1
+    <piers@cpan.org>: Recipient address rejected: Access denied (in reply to
+    RCPT TO command)
+
 ================================================================================
                       ORIGINAL README FOLLOWS BELOW
 ================================================================================
