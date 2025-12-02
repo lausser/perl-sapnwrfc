@@ -11,7 +11,7 @@ Last Official:      Version 0.37 (2013)
 
 Fork Maintainer:    Gerhard Lausser <gerhard.lausser@consol.de>
 Fork Repository:    https://github.com/lausser/perl-sapnwrfc
-Current Version:    0.50 (2025)
+Current Version:    0.51 (2025)
 
 ABOUT THIS FORK
 ---------------
@@ -150,6 +150,8 @@ New fork by Gerhard Lausser to support check_sap_health on modern platforms.
 Version 0.50 marks a fresh start for this fork, creating clear distance
 from the abandoned upstream project with its inconsistent versioning
 (0.31/0.37/0.38 in different files).
+
+Further changes can be found in the file *Changes*.
 
 Unfortunately the original author was not reachable any more.
 <piers@cpan.org>: host b1.develooper.com[45.54.12.11] said: 554 5.7.1
