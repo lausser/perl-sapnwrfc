@@ -840,16 +840,9 @@ SV* SAPNWRFC_add_parameter(SV* sv_self, SV* sv_parameter){
 /* Load the sapnwrfc.ini file */
 SV * SAPNWRFC_load_ini(SV * sv_ini){
 
-    SAPNW_FUNC_DESC *dptr;
     RFC_RC rc = RFC_OK;
     RFC_ERROR_INFO errorInfo;
-    SV * sv_function_def;
-    SV * sv_descriptor;
-    HV* h_func_def;
-    HV* h_parameters;
     SAP_UC * ini;
-    RFC_FUNCTION_DESC_HANDLE func_desc_handle;
-    RFC_ABAP_NAME func_name;
 
     rc = RfcSetIniPath((ini = u8to16(sv_ini)), &errorInfo);
     free((char *)ini);
@@ -1048,7 +1041,6 @@ SV * SAPNWRFC_destroy_function_descriptor(SV* sv_self){
 
     SAPNW_FUNC_DESC *dptr;
     RFC_ERROR_INFO errorInfo;
-    RFC_RC rc = RFC_OK;
     HV* h_self;
     SV* sv_func_def;
 
@@ -1064,24 +1056,7 @@ SV * SAPNWRFC_destroy_function_descriptor(SV* sv_self){
         croak("Non-existent function descriptor pointer in destroy_function_descriptor\n");
     }
 
-    rc = RfcDestroyFunctionDesc(dptr->handle, &errorInfo);
-    dptr->handle = NULL;
-    /*
-  if (rc != RFC_OK) {
-      fprintf(stderr, "Problem in RfcDestroyFunctonDesc: %d \n", rc);
-      fprintfU(stderr, cU("Problem in RfcDestroyFunctonDesc : %d / %s / %s\n"),
-                         errorInfo.code,
-                                             errorInfo.key,
-                                              errorInfo.message);
-      fprintf(stderr, "Problem in RfcDestroyFunctonDesc (%s)\n",
-                           dptr->name);
-      croak("Problem in RfcDestroyFunctonDesc (%s): %d / %s / %s\n",
-                           dptr->name,
-                         errorInfo.code,
-                                             sv_pv(u16to8(errorInfo.key)),
-                                              sv_pv(u16to8(errorInfo.message)));
-    }
-    */
+    (void)RfcDestroyFunctionDesc(dptr->handle, &errorInfo);
     dptr->handle = NULL;
     dptr->conn_handle = NULL;
     free(dptr->name);
@@ -1175,7 +1150,6 @@ SV * SAPNWRFC_destroy_function_call(SV* sv_self){
     RFC_RC rc = RFC_OK;
     HV* h_self;
     SV* sv_function;
-    SV* sv_name;
 
     h_self =  (HV*)SvRV( sv_self );
     if (hv_exists(h_self, (char *) "funccall", 8)) {
@@ -1624,8 +1598,8 @@ SV * get_table_line(RFC_STRUCTURE_HANDLE line){
     RFC_TYPE_DESC_HANDLE typeHandle;
     RFC_FIELD_DESC fieldDesc;
     unsigned fieldCount, i;
-    HV* hv_val;
-    AV* av_val;
+    HV* hv_val = NULL;
+    AV* av_val = NULL;
 
     typeHandle = RfcDescribeType(line, &errorInfo);
     if (typeHandle == NULL) {
@@ -1707,7 +1681,6 @@ SV * get_table_value(DATA_CONTAINER_HANDLE hcont, SAP_UC *name){
 
 SV * get_parameter_value(SV* sv_name, SAPNW_FUNC *fptr){
 
-    SAPNW_CONN_INFO *cptr;
     SAPNW_FUNC_DESC *dptr;
     RFC_RC rc = RFC_OK;
     RFC_ERROR_INFO errorInfo;
@@ -1717,7 +1690,6 @@ SV * get_parameter_value(SV* sv_name, SAPNW_FUNC *fptr){
     SV* sv_pvalue;
 
     dptr = fptr->desc_handle;
-    cptr = dptr->conn_handle;
 
     /* get the parameter description */
     rc = RfcGetParameterDescByName(dptr->handle, (p_name = u8to16(sv_name)), &paramDesc, &errorInfo);
@@ -2308,7 +2280,6 @@ void set_table_value(DATA_CONTAINER_HANDLE hcont, SAP_UC *name, SV* sv_value){
 
 void set_parameter_value(SAPNW_FUNC *fptr, SV* sv_name, SV* sv_value){
 
-    SAPNW_CONN_INFO *cptr;
     SAPNW_FUNC_DESC *dptr;
     RFC_RC rc = RFC_OK;
     RFC_ERROR_INFO errorInfo;
@@ -2321,7 +2292,6 @@ void set_parameter_value(SAPNW_FUNC *fptr, SV* sv_name, SV* sv_value){
     }
 
     dptr = fptr->desc_handle;
-    cptr = dptr->conn_handle;
 
     /* get the parameter description */
     rc = RfcGetParameterDescByName(dptr->handle, (p_name = u8to16(sv_name)), &paramDesc, &errorInfo);
@@ -2404,8 +2374,6 @@ void set_parameter_value(SAPNW_FUNC *fptr, SV* sv_name, SV* sv_value){
 /* Create a Function Module handle to be used for an RFC call */
 SV * SAPNWRFC_set_parameter_active(SV* sv_func_call, SV* sv_name, SV* sv_active){
 
-    SAPNW_CONN_INFO *cptr;
-    SAPNW_FUNC_DESC *dptr;
     SAPNW_FUNC *fptr;
     RFC_RC rc = RFC_OK;
     RFC_ERROR_INFO errorInfo;
@@ -2424,9 +2392,6 @@ SV * SAPNWRFC_set_parameter_active(SV* sv_func_call, SV* sv_name, SV* sv_active)
     } else {
         croak("Non-existent function call pointer in set_parameter_active\n");
     }
-
-    dptr = fptr->desc_handle;
-    cptr = dptr->conn_handle;
 
     rc = RfcSetParameterActive(fptr->handle, (p_name = u8to16(sv_name)), SvIV(sv_active), &errorInfo);
     free(p_name);
@@ -2527,7 +2492,6 @@ RFC_RC SAP_API myrfc_function_callback(RFC_CONNECTION_HANDLE rfcHandle, RFC_FUNC
     SAPNW_FUNC *fptr;
     SV* sv_parameters;
     SV* sv_function;
-    SV* sv_parm;
     SV* sv_name;
     SV* sv_func_name;
     SV* sv_value;
@@ -2538,13 +2502,12 @@ RFC_RC SAP_API myrfc_function_callback(RFC_CONNECTION_HANDLE rfcHandle, RFC_FUNC
     SV* sv_emessage;
     HV* hv_parameters;
     HV* hv_error;
-    HE* he_entry;
     AV* av_value;
     SAP_UC *p_name;
     SAP_UC *pkey;
     SAP_UC *pmessage;
     SAP_UC *useless_void;
-    unsigned i, r, idx, tidx;
+    unsigned i, r, tidx;
     unsigned tabLen;
     unsigned parm_count;
     RFC_PARAMETER_DESC parm_desc;

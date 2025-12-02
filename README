@@ -95,6 +95,47 @@ Since this is not on CPAN, install directly from GitHub:
   make test
   make install
 
+SNC (SECURE NETWORK COMMUNICATIONS) SUPPORT
+--------------------------------------------
+The perl-sapnwrfc module supports SNC for encrypted/authenticated RFC connections.
+This has been supported since the original code was written, but was never documented.
+
+SNC enables:
+  - Mutual authentication between client and SAP system
+  - Encryption of data in transit
+  - Integration with GSS-API security libraries (SAP CommonCryptoLib, Kerberos)
+
+Example SNC connection:
+
+  use SAPNW::Rfc;
+
+  my $conn = SAPNW::Rfc->rfc_connect(
+      ashost          => 'sap.example.com',
+      sysnr           => '00',
+      client          => '800',
+      snc_mode        => '1',                              # Enable SNC
+      snc_lib         => '/usr/sap/cryptolib/libsapcrypto.so',
+      snc_myname      => 'p:CN=CLIENT, O=MyCompany, C=US',
+      snc_partnername => 'p:CN=SAP/ABC, O=MyCompany, C=DE',
+      snc_qop         => '9',                              # Maximum protection
+      lang            => 'EN'
+  );
+
+Key SNC Parameters:
+  snc_mode        - Enable SNC (1=on, 0=off)
+  snc_lib         - Path to crypto library (e.g., libsapcrypto.so)
+  snc_myname      - Client's SNC identity (X.509 DN format)
+  snc_partnername - SAP server's SNC identity
+  snc_qop         - Quality of Protection (1-9, 9=maximum)
+
+Requirements:
+  - SAP NetWeaver RFC SDK 7.50+ (included in this distribution's build)
+  - SAP CommonCryptoLib or compatible GSS-API library
+  - Valid certificates/PSE files (use sapgenpse to manage)
+  - Backend SAP system configured for SNC
+
+For detailed SNC setup, see the SAP documentation or contact me for consulting.
+
 CHANGES IN VERSION 0.50 (2025)
 -------------------------------
 New fork by Gerhard Lausser to support check_sap_health on modern platforms.
