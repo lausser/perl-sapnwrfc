@@ -10,7 +10,6 @@ use strict;
 use SAPNW::Base;
 use base qw(SAPNW::Base);
 use Data::Dumper;
-use Env qw($RFC_INI);
 
 require 5.008;
 
@@ -72,9 +71,9 @@ sub rfc_connect {
         }
         delete $config->{ini};
     }
-    elsif ($RFC_INI) {
-        SAPNW::Connection::load_ini($RFC_INI);
-        debug("Using RFC_INI, sapnwrfc.ini file loaded from: ".$RFC_INI);
+    elsif ($ENV{RFC_INI}) {
+        SAPNW::Connection::load_ini($ENV{RFC_INI});
+        debug("Using RFC_INI, sapnwrfc.ini file loaded from: ".$ENV{RFC_INI});
     }
     debug("config passed on: ".Dumper($config));
     my $conn = new SAPNW::Connection(%{$config});
