@@ -1040,7 +1040,6 @@ SV * SAPNWRFC_function_lookup(SV * sv_self, SV * sv_func){
 SV * SAPNWRFC_destroy_function_descriptor(SV* sv_self){
 
     SAPNW_FUNC_DESC *dptr;
-    RFC_ERROR_INFO errorInfo;
     HV* h_self;
     SV* sv_func_def;
 
@@ -1056,7 +1055,12 @@ SV * SAPNWRFC_destroy_function_descriptor(SV* sv_self){
         croak("Non-existent function descriptor pointer in destroy_function_descriptor\n");
     }
 
-    (void)RfcDestroyFunctionDesc(dptr->handle, &errorInfo);
+    /* DO NOT call RfcDestroyFunctionDesc() here!
+     * The handle was obtained from RfcGetFunctionDesc() which returns
+     * SDK-managed cached handles. Per SAP SDK documentation, only handles
+     * from RfcCreateFunctionDesc() should be destroyed with RfcDestroyFunctionDesc().
+     * Destroying SDK-cached handles corrupts the internal cache and causes
+     * segfaults on subsequent function_lookup() calls. */
     dptr->handle = NULL;
     dptr->conn_handle = NULL;
     free(dptr->name);
